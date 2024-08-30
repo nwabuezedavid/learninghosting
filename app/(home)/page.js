@@ -86,7 +86,6 @@ $25M+
 <Testimonal/>
 <Referrak/>
 <div className='p-3 '>
-<script src="https://widgets.coingecko.com/gecko-coin-price-static-headline-widget.js"></script>
 <gecko-coin-price-static-headline-widget locale="en" transparent-background="true" outlined="true" coin-ids="sundog,solana,aave,pepe,bellscoin,zano,gems-vip,sun-token,popcat,tron,io,matic-network,maga,bitcoin,zksync" initial-currency="usd"></gecko-coin-price-static-headline-widget></div>
 </section>
 </>
