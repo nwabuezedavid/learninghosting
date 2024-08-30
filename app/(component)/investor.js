@@ -23,7 +23,7 @@ const Referrak = () => {
                         <ul className="w-full fex flex-col *:p-2 space-y-2 *:bg-slate-50 p-2 px-6 pt-5">
                             <li>Sign up or log in to your {datax} account.
                             </li>
-                            <li>Navigate to the "Referral Program" section.</li>
+                            <li>Navigate to the Referral Program  section.</li>
                             <li>Copy your unique referral link.</li>
                         </ul>
                     </div>

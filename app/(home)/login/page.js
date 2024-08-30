@@ -40,7 +40,7 @@ const LoginPage = () => {
     }
 
     // If all validations pass, clear the error message
-    setError("");
+    setError(null);
     setIsSubmitting(true); // Disable the submit button
 
     // Simulating a network request with setTimeout
@@ -113,7 +113,7 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?{" "}
+          Already have an account?s
           <Link href="/register" className="font-medium text-blue-600 hover:text-blue-600">
             Register
           </Link>

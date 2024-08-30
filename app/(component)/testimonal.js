@@ -78,14 +78,14 @@ const ss = setInterval(() => {
 <header className="text-[34px]">Testimonial </header>
 <main ref={scroll1}  className="flex  hidbar w-full overflow-auto whitespace-break-spaces h-fit  flex-col">
     <div className="w-fit flex space-x-3">
-    {testimonials?.splice(9,19).filter((e, id)=>   <TexComet key={id} data={e}/>)}
+    {testimonials?.map((e, id)=>   <TexComet key={id} data={e}/>)}
 
     </div>
    
 </main>
 <main ref={scroll2} className="flex hidbar w-full overflow-auto whitespace-break-spaces h-fit  flex-col">
     <div className="w-fit flex space-x-3 items-end">
-  {testimonials?.splice(1,8).map((e, id)=>   <TexComet key={id} value={e}/>)}
+  {testimonials?.map((e, id)=>   <TexComet key={id} data={e}/>)}
 
 
     </div>
