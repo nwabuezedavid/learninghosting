@@ -10,6 +10,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (  
     <html lang="en">
+<script defer src="https://widgets.coingecko.com/gecko-coin-price-static-headline-widget.js"></script>
+
       <body className="scroll-smooth">
     
         {children}
