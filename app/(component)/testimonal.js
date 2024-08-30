@@ -30,7 +30,6 @@ const testimonials = [
 const Testimonal = () => {
 const eig = useRef()
   
-  console.log(testimonials);
   
 const scroll1 = useRef()
 const scroll2 = useRef()
