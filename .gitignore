@@ -12,7 +12,7 @@
 # next.js
 /.next/
 /out/
-
+/public/bootstrap-icons-1.10.5
 # production
 /build
 

@@ -68,10 +68,13 @@
 
   @layer base {
     * {
-      @apply border-border;
+      @apply border-border  m-0 p-0;
     }
     body {
-      @apply bg-background text-foreground;
+      @apply bg-background text-foreground m-0 p-0 ;
+    }
+    .btn{
+      @apply bg-gradient-to-r to-red-300 from-blue-900 
     }
   }
 
@@ -85,3 +88,23 @@
     } */
   
   }
+
+  /* Style for Chrome, Safari, and Edge */
+::-webkit-scrollbar {
+  width: 12px; /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Color of the track (scrollbar background) */
+  border-radius: 10px; /* Rounds the corners of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #888; /* Color of the scroll thumb */
+  border-radius: 10px; /* Rounds the corners of the scroll thumb */
+  border: 2px solid #f1f1f1; /* Creates a border around the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* Changes color on hover */
+}

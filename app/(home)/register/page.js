@@ -1,13 +1,21 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { Register } from "@/server/auth";
+import { Uselogin } from "@/app/(component)/context/auth";
+import { SendWendmail } from "@/lib/mail";
+import AccountActivation from "@/mail/activate";
+import { useRouter } from "next/navigation";
 
 
 const RegisterPage = () => {
   // State to store all form input values in a single object
+  const {user , setuser} =Uselogin()
+  const routew = useRouter()
   const [formData, setFormData] = useState({
     fullName: "",
     lastName: "",
+    username: "",
     email: "",
     password: "",
     agreeToTerms: false,
@@ -23,15 +31,45 @@ const RegisterPage = () => {
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
+    
   };
+  // SecureToken :"a93a113b-ec47-454c-91bc-ef950fb9f27e",
+
+  function sendmail(params) {
+    try {
+      
+    Email.send({
+        Host : "smtp.elasticemail.com",
+  Username : "nwabuezedavid333@gmail.com",
+  Password : "25992E117FE5F741770D1B1685BF6C36C7D4",
+  Port:"2525",
+      To : "nwabuezedavid013@gmail.com",
+      From : `daspajugna@gufum.com`,
+      Subject : "This is the subject",
+      Body : "And this is the body"
+  }).then(
+    message => alert(message)
+  );
+  
+    } catch (error) {
+      alert(error)
+    }
+  // if(window.Email){
+  //   window.Email.send
+  // }
+   }
+
+
+
+
 
   const handleRegister = (e) => {
     e.preventDefault();
 
-    const { fullName, lastName, email, password, agreeToTerms } = formData;
+    const { fullName,username, lastName, email, password, agreeToTerms } = formData;
 
     // Simple validation
-    if (!fullName || !lastName || !email || !password) {
+    if (!fullName || !lastName || !username || !email || !password) {
       setError("All fields are required.");
       return;
     }
@@ -49,13 +87,46 @@ const RegisterPage = () => {
     }
 
     // If all validations pass, clear the error message
-    setError("");
     setIsSubmitting(true); // Disable the submit button
+    Register(formData)
+    .then(async e=>  {
+      if (e?.error){
+        setError('user already exist ')
+      }
+      else{
+        const req = {
+          'to':formData.email, 
+          'subject':'Account verification Link',
+          'token':e.USER.uuid,
+        }
+        
+        await SendWendmail(req)
 
+        .then(e=> {
+
+          setuser(e.USER)
+          setError('an mail was sent to your email');
+          routew.refresh()
+        }
+      ).catch(xe=> {
+        
+        setError('404 error', xe);
+      }
+      
+    )
+    routew.refresh()
+      }
+      
+     
+
+    })
+    .catch(ex =>{
+      setError(ex);
+      
+    })
     // Simulating a network request with setTimeout
     setTimeout(() => {
       setIsSubmitting(false); // Re-enable the submit button after registration
-      alert("Registration Successful!");
     }, 2000);
   };
 
@@ -73,6 +144,24 @@ const RegisterPage = () => {
         )}
 
         <form onSubmit={handleRegister} className="space-y-6">
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Username
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              required
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600"
+              placeholder="Enter your username"
+            />
+          </div>
           <div>
             <label
               htmlFor="fullName"

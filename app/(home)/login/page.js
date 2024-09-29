@@ -1,9 +1,15 @@
 "use client";
+import { Uselogin } from "@/app/(component)/context/auth";
+import { SendWendmail } from "@/lib/mail";
+import { Login } from "@/server/auth";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 const LoginPage = () => {
   // State to store all form input values in a single object
+  const {user , setuser} =Uselogin()
+  const router = useRouter()
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -42,17 +48,50 @@ const LoginPage = () => {
     // If all validations pass, clear the error message
     setError(null);
     setIsSubmitting(true); // Disable the submit button
+Login(formData)
+.then(e=>{
+  if(e.uuid){
+    console.log(e);
+  if (e.isverified == false ){
+    
+    setError("verify your account by click on the link send to mail ");
+    const req = {
+      'to':formData.email, 
+      'subject':'Account verification Link',
+      'token':e.uuid,
+    }
+    
+    SendWendmail(req)
+     
+  }else{
 
+    setuser(e)
+    setTimeout(() => {
+      setIsSubmitting(false); // Re-enable the submit button after registration
+      router.push(`/dashboard/${e.uuid}/`)
+      
+    }, 2000);
+  }
+  }else{
+    setError("email and password doest exist ");
+  }
+
+  
+})
+.catch(ex =>{
+  console.log("error", ex);
+  
+})
     // Simulating a network request with setTimeout
     setTimeout(() => {
       setIsSubmitting(false); // Re-enable the submit button after registration
-      alert("Login Successful!");
+
     }, 2000);
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-500 hover:scale-105">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md transform transition-all duration-500 ">
         <h2 className="text-2xl font-bold text-center text-blue-600 mb-6">
           Login to Your Account
         </h2>
@@ -113,12 +152,18 @@ const LoginPage = () => {
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-gray-600">
-          Already have an account?s
+          New Member?
           <Link href="/register" className="font-medium text-blue-600 hover:text-blue-600">
             Register
           </Link>
         </p>
+        <center className="p-3">
 
+          <Link href="/register" className="font-medium text-red-600 hover:text-red-6400">
+            Forgotten Password
+          </Link>
+  
+        </center>
       </div>
     </div>
   );
