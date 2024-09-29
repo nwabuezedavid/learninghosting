@@ -1,18 +1,24 @@
-/*
-  Warnings:
+-- CreateTable
+CREATE TABLE "User" (
+    "id" SERIAL NOT NULL,
+    "uuid" TEXT NOT NULL,
+    "username" TEXT,
+    "email" TEXT,
+    "password" TEXT,
+    "firstname" TEXT,
+    "token" TEXT,
+    "lastname" TEXT,
+    "balance" INTEGER,
+    "isverified" BOOLEAN NOT NULL DEFAULT true,
+    "isbanner" BOOLEAN NOT NULL DEFAULT false,
+    "totaldepo" INTEGER,
+    "totalwith" INTEGER,
+    "totalearn" INTEGER,
+    "profileImage" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-  - Added the required column `amount` to the `Deposite` table without a default value. This is not possible if the table is not empty.
-
-*/
--- DropForeignKey
-ALTER TABLE "Deposite" DROP CONSTRAINT "Deposite_depositeid_fkey";
-
--- AlterTable
-ALTER TABLE "Deposite" ADD COLUMN     "amount" INTEGER NOT NULL,
-ADD COLUMN     "approved" BOOLEAN NOT NULL DEFAULT false,
-ADD COLUMN     "session" TEXT,
-ADD COLUMN     "userId" INTEGER,
-ALTER COLUMN "depositeid" SET DATA TYPE TEXT;
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "sitedetails" (
@@ -29,6 +35,18 @@ CREATE TABLE "sitedetails" (
 );
 
 -- CreateTable
+CREATE TABLE "Wallet" (
+    "uuid" TEXT NOT NULL,
+    "name" TEXT,
+    "address" TEXT,
+    "logo2" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Wallet_pkey" PRIMARY KEY ("uuid")
+);
+
+-- CreateTable
 CREATE TABLE "investmentplan" (
     "id" SERIAL NOT NULL,
     "uuid" TEXT NOT NULL,
@@ -37,6 +55,7 @@ CREATE TABLE "investmentplan" (
     "max" INTEGER NOT NULL,
     "for" INTEGER NOT NULL,
     "every" INTEGER NOT NULL,
+    "isverified" BOOLEAN NOT NULL DEFAULT true,
     "logo" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated" TIMESTAMP(3) NOT NULL,
@@ -49,6 +68,7 @@ CREATE TABLE "Personinvested" (
     "uuid" TEXT NOT NULL,
     "userid" INTEGER,
     "plsnid" INTEGER,
+    "isverified" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "Personinvested_pkey" PRIMARY KEY ("uuid")
 );
@@ -58,6 +78,7 @@ CREATE TABLE "Notification" (
     "id" SERIAL NOT NULL,
     "uuid" TEXT NOT NULL,
     "userId" INTEGER,
+    "isverified" BOOLEAN NOT NULL DEFAULT true,
     "title" TEXT NOT NULL,
     "message" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -67,13 +88,27 @@ CREATE TABLE "Notification" (
 );
 
 -- CreateTable
+CREATE TABLE "Deposite" (
+    "id" SERIAL NOT NULL,
+    "depositeid" TEXT NOT NULL,
+    "userId" INTEGER,
+    "walletId" INTEGER,
+    "amount" INTEGER NOT NULL,
+    "approved" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Deposite_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "withdrawal" (
     "id" SERIAL NOT NULL,
     "withdrwalid" TEXT NOT NULL,
     "userId" INTEGER,
-    "amount" INTEGER NOT NULL,
-    "approved" BOOLEAN NOT NULL DEFAULT false,
-    "session" TEXT,
+    "amount" INTEGER,
+    "wallet" TEXT,
+    "approved" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated" TIMESTAMP(3) NOT NULL,
 
@@ -81,7 +116,22 @@ CREATE TABLE "withdrawal" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_uuid_key" ON "User"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "sitedetails_uuid_key" ON "sitedetails"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Wallet_uuid_key" ON "Wallet"("uuid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "investmentplan_id_key" ON "investmentplan"("id");
@@ -105,10 +155,19 @@ CREATE UNIQUE INDEX "Notification_id_key" ON "Notification"("id");
 CREATE UNIQUE INDEX "Notification_uuid_key" ON "Notification"("uuid");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Deposite_id_key" ON "Deposite"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Deposite_depositeid_key" ON "Deposite"("depositeid");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "withdrawal_id_key" ON "withdrawal"("id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "withdrawal_withdrwalid_key" ON "withdrawal"("withdrwalid");
+
+-- AddForeignKey
+ALTER TABLE "Wallet" ADD CONSTRAINT "Wallet_uuid_fkey" FOREIGN KEY ("uuid") REFERENCES "Deposite"("depositeid") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Personinvested" ADD CONSTRAINT "Personinvested_plsnid_fkey" FOREIGN KEY ("plsnid") REFERENCES "investmentplan"("id") ON DELETE SET NULL ON UPDATE CASCADE;
