@@ -10,6 +10,8 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (  
     <html lang="en">
+     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6302616580922382"
+     crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/bootstrap-icons-1.10.5/font/bootstrap-icons.css" />
       <body className="scroll-smooth m-0 p-0 ">
     
